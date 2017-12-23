@@ -8,22 +8,27 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var http_1 = require('@angular/http');
 var core_1 = require('@angular/core');
-var foto_component_1 = require('./foto.component');
-var foto_pipes_1 = require('./foto.pipes');
-var foto_service_1 = require('./foto.service');
-var FotoModule = (function () {
-    function FotoModule() {
+var FotoService = (function () {
+    function FotoService(http) {
+        this.url = 'v1/fotos';
+        this.http = http;
+        this.headers = new http_1.Headers();
+        this.headers.append('Content-type', 'application/json');
     }
-    FotoModule = __decorate([
-        core_1.NgModule({
-            declarations: [foto_component_1.FotoComponent, foto_pipes_1.FiltroPorTitulo],
-            exports: [foto_component_1.FotoComponent, foto_pipes_1.FiltroPorTitulo],
-            providers: [foto_service_1.FotoService]
-        }), 
-        __metadata('design:paramtypes', [])
-    ], FotoModule);
-    return FotoModule;
+    FotoService.prototype.lista = function () {
+        return this.http.get(this.url)
+            .map(function (res) { return res.json(); });
+    };
+    FotoService.prototype.cadastra = function (foto) {
+        return this.http.post(this.url, JSON.stringify(foto), { headers: this.headers });
+    };
+    FotoService = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [http_1.Http])
+    ], FotoService);
+    return FotoService;
 }());
-exports.FotoModule = FotoModule;
-//# sourceMappingURL=foto.module.js.map
+exports.FotoService = FotoService;
+//# sourceMappingURL=foto.service.js.map
