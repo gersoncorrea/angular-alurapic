@@ -15,16 +15,38 @@ export class FotoService{
         this.headers.append('Content-type', 'application/json')
     }
 
+
+    buscaPorId(id: string): Observable<FotoComponent>{
+        return this.http
+                .get(this.url + '/' + id)
+                .map(res => res.json())
+    }
+
     remove(foto: FotoComponent):Observable<Response>{
-        return this.http.delete(this.url + '/' + foto._id);
+        return this.http
+                .delete(this.url + '/' + foto._id);
     }
 
     lista(): Observable<FotoComponent[]>{
-        return this.http.get(this.url)
-        .map(res=> res.json());
+        return this.http
+                .get(this.url)
+                .map(res=> res.json());
     }
 
     cadastra(foto: FotoComponent): Observable<Response>{
-        return this.http.post(this.url, JSON.stringify(foto),{headers: this.headers})
+        
+        if(foto._id){
+            return this.http
+            .put(
+                this.url + '/' + foto._id, 
+                JSON.stringify(foto),
+                { headers: this.headers});    
+        } else {
+            return this.http
+            .post(
+                this.url, 
+                JSON.stringify(foto),
+                { headers: this.headers});
+        }
     }
 }

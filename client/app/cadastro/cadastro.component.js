@@ -13,9 +13,10 @@ var foto_component_1 = require('../foto/foto.component');
 var http_1 = require('@angular/http');
 var forms_1 = require('@angular/forms');
 var foto_service_1 = require('../foto/foto.service');
+var router_1 = require('@angular/router');
 var CadastroComponent = (function () {
-    function CadastroComponent(/*http: Http*/ service, fb) {
-        // this.http = http;
+    function CadastroComponent(/*http: Http*/ service, fb, route, router) {
+        var _this = this;
         // tipando propriedade
         // foto: Object = {
         //     titulo:'',
@@ -23,11 +24,23 @@ var CadastroComponent = (function () {
         //     descricao:''
         // }
         this.foto = new foto_component_1.FotoComponent();
+        this.mensagem = '';
+        // this.http = http;
+        this.router = router;
+        this.route = route;
         this.service = service;
         this.meuForm = fb.group({
             titulo: ['', forms_1.Validators.compose([forms_1.Validators.required, forms_1.Validators.minLength(4)])],
             url: ['', forms_1.Validators.required],
             descricao: ''
+        });
+        this.route.params.subscribe(function (params) {
+            console.log(params['id']);
+            var id = params['id'];
+            if (id) {
+                _this.service.buscaPorId(id)
+                    .subscribe(function (foto) { return _this.foto = foto; }, function (erro) { return console.log(erro); });
+            }
         });
     }
     CadastroComponent.prototype.cadastrar = function (event) {
@@ -44,6 +57,7 @@ var CadastroComponent = (function () {
         this.service.cadastra(this.foto)
             .subscribe(function () {
             _this.foto = new foto_component_1.FotoComponent();
+            _this.router.navigate(['']);
             console.log('Foto salva com sucesso.');
         }, function (erro) { return console.log(erro); });
     };
@@ -53,7 +67,7 @@ var CadastroComponent = (function () {
             selector: 'cadastro',
             templateUrl: './cadastro.component.html'
         }), 
-        __metadata('design:paramtypes', [foto_service_1.FotoService, forms_1.FormBuilder])
+        __metadata('design:paramtypes', [foto_service_1.FotoService, forms_1.FormBuilder, router_1.ActivatedRoute, router_1.Router])
     ], CadastroComponent);
     return CadastroComponent;
 }());
