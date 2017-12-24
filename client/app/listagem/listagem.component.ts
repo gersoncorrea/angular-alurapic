@@ -17,6 +17,8 @@ export class ListagemComponent{
     // fotos: Object[] = [];
 
     fotos: FotoComponent[] = []
+    service: FotoService;
+    mensagem: string = '';
 
     constructor( /*http: Http*/ service: FotoService){
         /**
@@ -29,10 +31,29 @@ export class ListagemComponent{
         //     erro => console.log(erro)
         // )
         
-        service.lista()
+        this.service = service;
+        this.service
+        .lista()
         .subscribe(
             fotos => this.fotos = fotos,
             erro => console.log(erro)
         )
     }
+
+    remove(foto: FotoComponent){
+        this.service
+        .remove(foto)
+        .subscribe(
+            () => {
+                let novasFotos = this.fotos.slice(0);
+                let indice = novasFotos.indexOf(foto);
+                novasFotos.splice(indice,1);
+                this.fotos = novasFotos;
+                this.mensagem = 'Foto removida com sucesso'
+            },
+            erro => { 
+                console.log(erro);                 
+                this.mensagem = 'Não é possível remover'
+            });
+        }
 }

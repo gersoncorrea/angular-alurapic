@@ -24,9 +24,27 @@ var ListagemComponent = (function () {
         var _this = this;
         // fotos: Object[] = [];
         this.fotos = [];
-        service.lista()
+        this.mensagem = '';
+        this.service = service;
+        this.service
+            .lista()
             .subscribe(function (fotos) { return _this.fotos = fotos; }, function (erro) { return console.log(erro); });
     }
+    ListagemComponent.prototype.remove = function (foto) {
+        var _this = this;
+        this.service
+            .remove(foto)
+            .subscribe(function () {
+            var novasFotos = _this.fotos.slice(0);
+            var indice = novasFotos.indexOf(foto);
+            novasFotos.splice(indice, 1);
+            _this.fotos = novasFotos;
+            _this.mensagem = 'Foto removida com sucesso';
+        }, function (erro) {
+            console.log(erro);
+            _this.mensagem = 'Não é possível remover';
+        });
+    };
     ListagemComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
