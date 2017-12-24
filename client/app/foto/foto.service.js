@@ -17,6 +17,9 @@ var FotoService = (function () {
         this.headers = new http_1.Headers();
         this.headers.append('Content-type', 'application/json');
     }
+    FotoService.prototype.remove = function (foto) {
+        return this.http.delete(this.url + '/' + foto._id);
+    };
     FotoService.prototype.lista = function () {
         return this.http.get(this.url)
             .map(function (res) { return res.json(); });
